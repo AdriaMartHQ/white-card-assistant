@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import WhiteCardPage from "./white-card/page";
 
 export default function HomePage() {
-  redirect("/white-card");
+  return <WhiteCardPage />;
 }

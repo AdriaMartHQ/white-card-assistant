@@ -3,21 +3,81 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f1f5f9;
+  --foreground: #0f172a;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Subtle paper texture for the printable card */
+.paper-texture {
+  background-color: #fefefe;
+  background-image:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.015) 0%, transparent 60%),
+    radial-gradient(circle at 90% 10%, rgba(15, 23, 42, 0.012), transparent 40%),
+    radial-gradient(circle at 10% 90%, rgba(15, 23, 42, 0.012), transparent 45%);
+}
+
+/* A4 portrait, tighter margin (8mm) so the form fits on one page.
+   NOTE: browser-added print headers/footers (URL, date, page #) can't be
+   reliably hidden via CSS — user must uncheck "Headers and footers" in the
+   print dialog. */
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
+.print-page {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+@media print {
+  /* Strip every wrapper background/padding so only the form prints */
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100%;
+  }
+  main, main > div, main > div > div {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    height: 100%;
+  }
+  /* Disable sticky positioning during print */
+  .lg\:sticky {
+    position: static !important;
+  }
+  /* Force the form to fill the printable area top-to-bottom */
+  .print-page {
+    max-width: none !important;
+    width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 16mm);
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Force colors (e.g. table borders) to render */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Discourage page breaks inside the form table */
+  table, tr, td {
+    page-break-inside: avoid;
+  }
 }
 
 @layer utilities {
